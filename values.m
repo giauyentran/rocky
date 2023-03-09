@@ -1,8 +1,13 @@
 t = 0.1122;
 g = -9.8;
 K = 0.001589;
-m = 1.2;
-l = 0.5;
+m = 0.53;  %kg
+
+
+
+period = 27.29/20;
+omega_n = 1/period * 2 *pi
+l = -g/omega_n^2
 
 
 % syms H(s) K tau v_step
@@ -23,4 +28,3 @@ l = 0.5;
 % plot(time, left_motor)
 
 
-model
