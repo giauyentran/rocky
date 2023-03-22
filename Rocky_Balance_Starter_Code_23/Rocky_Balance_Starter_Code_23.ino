@@ -68,7 +68,7 @@ Balboa32U4Buzzer buzzer;
 Balboa32U4ButtonA buttonA;
 
 
-#define FIXED_ANGLE_CORRECTION (0.26)  // ***** Replace the value 0.25 with the value you obtained from the Gyro calibration procedure
+#define FIXED_ANGLE_CORRECTION (0.241)  // ***** Replace the value 0.25 with the value you obtained from the Gyro calibration procedure
 
 
 
@@ -86,17 +86,38 @@ void BalanceRocky()
 
     // **************Enter the control parameters here
     
-  float Kp = 0;
-  float Ki = 0;
-  float Ci = 0;   
-  float Jp = 0;
-  float Ji = 0;
+  float Kp = 5437.1;
+  float Ki = 25756;
+  float Jp = 500.4405;
+//  float Jp = 0;
+  float Ji = -1932;
+//  float Ji = 0;
+//  float Ci=0;
+  float Ci = -818.39; 
+
+//      float Kp = 27577;
+//  float Ki = 135220;
+//  float Jp = 959.4084;
+////  float Jp = 0;
+//  float Ji = -21492;
+////  float Ji = 0;
+////  float Ci=0;
+//  float Ci = -11494; 
+
+//    float Kp = 8.077*pow(10, 4);
+//  float Ki = 3.881*pow(10, 5);
+//  float Jp = 4.5958*pow(10, 3);
+////  float Jp = 0;
+//  float Ji = -6.3596*pow(10, 4);
+////  float Ji = 0;
+////  float Ci=0;
+//  float Ci = -1.006*pow(10, 5);   
 
 
 
 
     float v_c_L, v_c_R; // these are the control velocities to be sent to the motors
-    float v_d = 0; // this is the desired speed produced by the angle controller
+    float v_d; // this is the desired speed produced by the angle controller
 
 
    // Variables available to you are: 
@@ -106,10 +127,10 @@ void BalanceRocky()
    // measured_speedL - left wheel speed (m/s)
    // distLeft_m - distance traveled by left wheel in meters
    // distRight_m - distance traveled by right wheel in meters  (this is the integral of the velocities) 
-   // dist_accum - integral of the distance
+   // dist_accum - integrsal of the distance
 
    // *** enter an equation for v_d in terms of the variables available ****
-    v_d =  // this is the desired velocity from the angle controller 
+    v_d = Kp * angle_rad + Ki * angle_rad_accum;// this is the desired velocity from the angle controller 
       
 
   // The next two lines implement the feedback controller for the motor. Two separate velocities are calculated. 
@@ -119,8 +140,8 @@ void BalanceRocky()
   // right to left. This helps ensure that the Left and Right motors are balanced
 
   // *** enter equations for input signals for v_c (left and right) in terms of the variables available ****
-    v_c_R = 
-    v_c_L =        
+    v_c_L = v_d - (Jp * measured_speedL + Ji * distLeft_m + Ci * dist_accum);  
+    v_c_R = v_d - (Jp * measured_speedR + Ji * distRight_m + Ci * dist_accum);    
 
 
 
@@ -133,13 +154,14 @@ void BalanceRocky()
 
     // the motor control signal has to be between +- 300. So clip the values to be within that range 
     // here
-    if(v_c_L > 300) v_c_L = 300;
-    if(v_c_R > 300) v_c_R = 300;
-    if(v_c_L < -300) v_c_L = -300;
-    if(v_c_R < -300) v_c_R = -300;
+    if(v_c_L > 600) v_c_L = 300;
+    if(v_c_R > 600) v_c_R = 300;
+    if(v_c_L < -600) v_c_L = -300;
+    if(v_c_R < -600) v_c_R = -300;
+//    if (angle_rad_accum > 1) angle_rad_accum = 0;
    
     // Set the motor speeds
-    motors.setSpeeds((int16_t) (v_c_L), (int16_t)(v_c_R));
+    motors.setSpeeds((int16_t) (v_c_R), (int16_t)(v_c_R));
 
 }
 
@@ -150,7 +172,7 @@ void setup()
   // Uncomment these lines if your motors are reversed.
   // motors.flipLeftMotor(true);
   // motors.flipRightMotor(true);
-
+  motors.allowTurbo(true);
   Serial.begin(9600);
   prev_time = 0;
   displacement = 0;
@@ -305,6 +327,8 @@ void loop()
 
 if(cur_time - prev_print_time > 103)   // do the printing every 105 ms. Don't want to do it for an integer multiple of 10ms to not hog the processor
   {
+        Serial.print(millis());   
+        Serial.print("\t");
         Serial.print(angle_rad);   
         Serial.print("\t");
         Serial.print(distLeft_m);
