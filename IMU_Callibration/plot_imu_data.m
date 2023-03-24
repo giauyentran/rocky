@@ -19,24 +19,18 @@ swing_period = mean(idx(2:end) - idx(1:end-1))/1000;
 figure(1)
 clf
 hold on
-plot(t/1000, theta, "linewidth", 1, "color", my_blue)
-plot(idx/1000, peaks, ".", "markersize", 15, "color", my_green)
+
+plot(t/1000, A, "linewidth", 1, "color", my_blue)
+plot(idx/1000, peaks, "r.", "markersize", 15)
+
 xlabel("Time (s)")
 ylabel("Angle (rad)")
-title("IMU Callibration Data", "color", [1 1 1])
-text(8, 0.4, "Mean Period = " +num2str(round(swing_period, 2)) + "s", "color", [1 1 1])
+title("IMU Callibration Data")
+text(6, 0.4, "Mean Period = " +num2str(round(swing_period, 2)) + "s")
 
 grid on
 grid minor
-
- set(gca,'Color', [0.1 0.1 0.1])
-    set(gca,'XColor',[1 1 1])
-    set(gca,'YColor',[1 1 1])
-    set(gca,'ZColor',[1 1 1])
-    set(gca,'YColor',[1 1 1])
-    set(gcf,'Color','k')
-    set(gcf, 'InvertHardcopy', 'off');
-print(gcf,'IMU_data.png','-dpng','-r600')
+print('-dsvg', '../plots/imudata.svg')
 
 
 %%

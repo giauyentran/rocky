@@ -25,5 +25,8 @@ plot(time, left_motor, "LineWidth", 0.5, "Color", my_color)
 plot(fit_all, 'r')
 legend('Right Motor', 'Left Motor', 'Curve Fit', 'location', 'southeast')
 title("Motor speeds over time"); legend("Right motor", "Left motor"); grid minor
-xlabel("Time (s)"); ylabel("Motor Speed (rpm)")
+xlabel("Time (s)"); ylabel("Velocity (m/s)")
 legend('Right Motor Data', 'Left Motor Data', 'Curve Fit')
+
+print('-dsvg', 'plots/motordata.svg')
+
