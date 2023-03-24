@@ -9,16 +9,17 @@ period = 50 % ms
 sampling_rate = 1000/period; %Hz
 
 data = readtable("swing2.csv");
-A = data.Var1(10:end-80);
-t = linspace(0, period*length(A), length(A));
+theta = data.Var1(10:end-80);
+t = linspace(0, period*length(theta), length(theta));
 
-[peaks, idx] = findpeaks(A, t);
+
+[peaks, idx] = findpeaks(theta, t);
 swing_period = mean(idx(2:end) - idx(1:end-1))/1000;
 
 figure(1)
 clf
 hold on
-plot(t/1000, A, "linewidth", 1, "color", my_blue)
+plot(t/1000, theta, "linewidth", 1, "color", my_blue)
 plot(idx/1000, peaks, ".", "markersize", 15, "color", my_green)
 xlabel("Time (s)")
 ylabel("Angle (rad)")
