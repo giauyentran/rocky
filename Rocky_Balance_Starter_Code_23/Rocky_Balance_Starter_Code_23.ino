@@ -87,13 +87,13 @@ void BalanceRocky()
     // **************Enter the control parameters here
     
   float Kp = 5437.1;
-  float Ki = 25756;
-  float Jp = 500.4405;
+  float Ki = 9756;
+  float Jp = 900.4405;
 //  float Jp = 0;
-  float Ji = -1932;
+  float Ji = -500;
 //  float Ji = 0;
 //  float Ci=0;
-  float Ci = -818.39; 
+  float Ci = -100; 
 
 //      float Kp = 27577;
 //  float Ki = 135220;
@@ -154,14 +154,14 @@ void BalanceRocky()
 
     // the motor control signal has to be between +- 300. So clip the values to be within that range 
     // here
-    if(v_c_L > 600) v_c_L = 300;
-    if(v_c_R > 600) v_c_R = 300;
-    if(v_c_L < -600) v_c_L = -300;
-    if(v_c_R < -600) v_c_R = -300;
+    if(v_c_L > 300) v_c_L = 300;
+    if(v_c_R > 300) v_c_R = 300;
+    if(v_c_L < -300) v_c_L = -300;
+    if(v_c_R < -300) v_c_R = -300;
 //    if (angle_rad_accum > 1) angle_rad_accum = 0;
    
     // Set the motor speeds
-    motors.setSpeeds((int16_t) (v_c_R), (int16_t)(v_c_R));
+    motors.setSpeeds((int16_t) (v_c_R), (int16_t)(v_c_L));
 
 }
 
@@ -333,11 +333,15 @@ if(cur_time - prev_print_time > 103)   // do the printing every 105 ms. Don't wa
         Serial.print("\t");
         Serial.print(distLeft_m);
         Serial.print("\t");
+        Serial.print(distRight_m);
+        Serial.print("\t");
         Serial.print(measured_speedL);
         Serial.print("\t");      
         Serial.print(measured_speedR);
         Serial.print("\t");      
-       Serial.println(speedCont);
+        Serial.print(dist_accum);
+        Serial.print("\t");  
+        Serial.println(speedCont);
        prev_print_time = cur_time;
   }
 
